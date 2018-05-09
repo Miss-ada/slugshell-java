@@ -9,7 +9,7 @@ public class Main {
     }
     boolean isBuiltin(Command command) {
         String str = command.name;
-        if (str.equals("exit") || str.equals("history") || str.equals("status") || str.equals("cd")) {
+        if (str.equals("exit") || str.equals("history") || str.equals("status") || str.equals("cd") || str.equals("ls")) {
             return true;
         } else {
             return false;
