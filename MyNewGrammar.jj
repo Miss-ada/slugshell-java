@@ -1,4 +1,34 @@
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
- */options{  static = true;}PARSER_BEGIN(Parser)
-public class Parser{  public static void main(String args []) throws ParseException  {    Parser parser = new Parser(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an expression like \"1+(2+3)*4;\" :");      try      {        switch (Parser.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        Parser.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(Parser)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{  < PLUS : "+" >| < MINUS : "-" >| < MULTIPLY : "*" >| < DIVIDE : "/" >}TOKEN :{  < CONSTANT : (< DIGIT >)+ >| < #DIGIT : [ "0"-"9" ] >}int one_line() :{}{  sum() ";"  {    return 0;  }| ";"  {    return 1;  }}void sum() :{}{  term()  (    (      < PLUS >    | < MINUS >    )    term()  )*}void term() :{}{  unary()  (    (      < MULTIPLY >    | < DIVIDE >    )    unary()  )*}void unary() :{}{  < MINUS > element()| element()}void element() :{}{  < CONSTANT >| "(" sum() ")"}
+ */options{  static = true;
+  JAVA_UNICODE_ESCAPE = true;
+  UNICODE_INPUT = true;}PARSER_BEGIN(MyNewGrammar)
+public class MyNewGrammar{  public static void main(String args []) throws ParseException  { //ps -ax| grep Finder    MyNewGrammar parser = new MyNewGrammar(new java.io.StringReader("| > >&"));	System.out.println("Reading from standard input...");
+    MyNewGrammar.Parse();
+	/*
+    while (true)    {      System.out.println("Reading from standard input...");      MyNewGrammar.Parse();
+      try      {        switch (MyNewGrammar.Parse())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }
+	  }      catch (Exception e)      {        System.out.println("Not OK.");        System.out.println(e.getMessage());        Parser.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }
+    */  }}PARSER_END(MyNewGrammar)
+/* SCANNING */
+SKIP :{  " "| "\r"| "\t"}TOKEN : /* OPERATORS */{  < GREAT : ">" >| < LESS : "<" >| < GREATGREAT : ">>" >| < GREATAMPERSAND : ">&" >
+| < PIPE : "|" >
+| < AMPERSAND : "&" >
+}TOKEN :{  < WORD : "\\-?\\w" >//how to implement a method here? 
+| < NEWLINE : "\n" > //how to implement a method here? }
+/* PARSING */
+void Parse():{}{ (Any())* <EOF>}
+
+void Any():
+{Token t;}
+{
+ ( t=<WORD>    {System.out.println("WORD    = '" + t.image + "'");}
+  | t=<NEWLINE>     {System.out.println("NEWLINE     = '" + t.image + "'");}
+  | t=<GREAT> {System.out.println("GREAT = '" + t.image + "'");}
+  | t=<LESS> {System.out.println("LESS = '" + t.image + "'");}
+  | t=<GREATGREAT> {System.out.println("GREATGREAT = '" + t.image + "'");}
+  | t=<GREATAMPERSAND> {System.out.println("GREATAMPERSAND = '" + t.image + "'");}
+  | t=<PIPE> {System.out.println("PIPE = '" + t.image + "'");}
+  | t=<AMPERSAND> {System.out.println("AMPERSAND = '" + t.image + "'");}
+  )  
+}
