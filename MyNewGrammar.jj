@@ -1,34 +1,107 @@
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
- */options{  static = true;
+ */
+options{  static = true;
   JAVA_UNICODE_ESCAPE = true;
-  UNICODE_INPUT = true;}PARSER_BEGIN(MyNewGrammar)
-public class MyNewGrammar{  public static void main(String args []) throws ParseException  { //ps -ax| grep Finder    MyNewGrammar parser = new MyNewGrammar(new java.io.StringReader("| > >&"));	System.out.println("Reading from standard input...");
-    MyNewGrammar.Parse();
-	/*
-    while (true)    {      System.out.println("Reading from standard input...");      MyNewGrammar.Parse();
-      try      {        switch (MyNewGrammar.Parse())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }
-	  }      catch (Exception e)      {        System.out.println("Not OK.");        System.out.println(e.getMessage());        Parser.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }
-    */  }}PARSER_END(MyNewGrammar)
+  UNICODE_INPUT = true;}PARSER_BEGIN(MyNewGrammar)
+import java.io.*;
+import java.util.*;
+
+
+public class MyNewGrammar{  public static void main(String args []) throws ParseException
+  { 
+	MyNewGrammar parser = new MyNewGrammar(System.in);
+    try {
+        Command result = parser.parseFile();
+        //parser.parseFile();		
+        System.out.println("file parsed successfully.");       
+ 		//System.out.println(result); 
+      }
+      catch(ParseException e){
+        System.out.println(e.toString());
+      }	
+  }
+ } 
+
+//  private static String usefulTypes[] = { 
+//    "p_cmd_and_args",  "p_arg_list", "p_pipe_list",
+//	"p_io_modifier", "p_io_modifier_list", "p_background_opt", "p_command_line"
+//	}
+PARSER_END(MyNewGrammar)
 /* SCANNING */
-SKIP :{  " "| "\r"| "\t"}TOKEN : /* OPERATORS */{  < GREAT : ">" >| < LESS : "<" >| < GREATGREAT : ">>" >| < GREATAMPERSAND : ">&" >
+SKIP :{
+  " "| "\n"| "\r"| "\t"}TOKEN : /* OPERATORS */{  < GREAT : ">" >| < LESS : "<" >| < GREATGREAT : ">>" >| < GREATAMPERSAND : ">&" >
 | < PIPE : "|" >
 | < AMPERSAND : "&" >
-}TOKEN :{  < WORD : "\\-?\\w" >//how to implement a method here? 
-| < NEWLINE : "\n" > //how to implement a method here? }
+}TOKEN :{  < WORD : ["a"-"z","A"-"Z","_", "-"] ( ["a"-"z","A"-"Z","_","0"-"9"] )* >
+}
 /* PARSING */
-void Parse():{}{ (Any())* <EOF>}
+//return an object from javacc
 
-void Any():
-{Token t;}
-{
- ( t=<WORD>    {System.out.println("WORD    = '" + t.image + "'");}
-  | t=<NEWLINE>     {System.out.println("NEWLINE     = '" + t.image + "'");}
-  | t=<GREAT> {System.out.println("GREAT = '" + t.image + "'");}
-  | t=<LESS> {System.out.println("LESS = '" + t.image + "'");}
-  | t=<GREATGREAT> {System.out.println("GREATGREAT = '" + t.image + "'");}
-  | t=<GREATAMPERSAND> {System.out.println("GREATAMPERSAND = '" + t.image + "'");}
-  | t=<PIPE> {System.out.println("PIPE = '" + t.image + "'");}
-  | t=<AMPERSAND> {System.out.println("AMPERSAND = '" + t.image + "'");}
-  )  
+Command parseFile() : {
+  Command command_line;
+} 
+{ 
+ p_command_line(){command_line = p_command_line();}
+ <EOF> { return command_line; }
 }
+
+Command p_command_line() : {
+  List<SingleCommand> pipe_list = new ArrayList<SingleCommand>();
+  List<ArrayList<String>> io_modifier_list = new ArrayList<ArrayList<String>>();
+// background_opt = 1 if run in background/[&]
+ int background_opt = 0;
+} 
+{ 
+	(p_pipe_list() {pipe_list = p_pipe_list(); }) [p_io_modifier_list() {io_modifier_list = p_io_modifier_list(); }] (p_background_opt() {background_opt = p_background_opt(); }) {
+   return new Command(pipe_list, io_modifier_list, background_opt);}
+}
+
+List<SingleCommand> p_pipe_list(): {
+  List<SingleCommand> pipe_list = new ArrayList<SingleCommand>();
+  SingleCommand sc;
+  SingleCommand psc;
+}
+{
+  (sc = p_cmd_and_args() {pipe_list.add(sc); })
+  (<PIPE> (psc = p_cmd_and_args()) {pipe_list.add(psc); })*
+  {return pipe_list;}
+}
+
+SingleCommand p_cmd_and_args(): {
+  Token cmd ;
+  List<String> args = new ArrayList<String>();
+  Token arg;
+}
+{
+  (cmd = <WORD>)(arg = <WORD> {args.add(arg.image);})* {return new SingleCommand(cmd.image, args); }
+}
+
+List<ArrayList<String>> p_io_modifier_list(): {
+  List<ArrayList<String>> io_modifiers = new ArrayList<ArrayList<String>>();
+  ArrayList<String > io_modifier;
+}
+{
+  (io_modifier = p_io_modifier() {io_modifiers.add(io_modifier);})+
+    {return io_modifiers; }
+}
+
+ArrayList<String> p_io_modifier(): {
+  ArrayList<String> io_modifier = new ArrayList<String>();
+  Token dir;
+  Token filename;
+}
+{
+  (dir = <GREAT>) (filename = <WORD>) {io_modifier.add(dir.image); io_modifier.add(filename.image);return io_modifier; } 
+| (dir = <GREATGREAT>)(filename = <WORD>) {io_modifier.add(dir.image); io_modifier.add(filename.image);return io_modifier; }
+| (dir = <GREATAMPERSAND>)(filename = <WORD>) {io_modifier.add(dir.image); io_modifier.add(filename.image);return io_modifier; }
+| (dir = <LESS>)(filename = <WORD>) {io_modifier.add(dir.image); io_modifier.add(filename.image);return io_modifier; }
+}
+
+int p_background_opt(): { }
+{
+  <AMPERSAND> {return 1;}
+| <EOF> {return 0;}
+}
+
+
