@@ -1,19 +1,28 @@
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
  */
-options{  static = true;
+options
+{
+  static = true;
   JAVA_UNICODE_ESCAPE = true;
-  UNICODE_INPUT = true;}PARSER_BEGIN(MyNewGrammar)
+  UNICODE_INPUT = true;
+  DEBUG_PARSER=true;
+  DEBUG_TOKEN_MANAGER = true;
+}
+
+PARSER_BEGIN(MyNewGrammar)
 import java.io.*;
 import java.util.*;
 
 
-public class MyNewGrammar{  public static void main(String args []) throws ParseException
+public class MyNewGrammar
+{
+  public static void main(String args []) throws ParseException
   { 
 	MyNewGrammar parser = new MyNewGrammar(System.in);
     try {
-        Command result = parser.parseFile();
-        //parser.parseFile();		
+        //Command result = parser.parseFile();
+		Command result = parser.parseFile();        
         System.out.println("file parsed successfully.");       
  		//System.out.println(result); 
       }
@@ -27,34 +36,53 @@ public class MyNewGrammar{  public static void main(String args []) throws Par
 //    "p_cmd_and_args",  "p_arg_list", "p_pipe_list",
 //	"p_io_modifier", "p_io_modifier_list", "p_background_opt", "p_command_line"
 //	}
-PARSER_END(MyNewGrammar)
+PARSER_END(MyNewGrammar)
+
 /* SCANNING */
-SKIP :{
-  " "| "\n"| "\r"| "\t"}TOKEN : /* OPERATORS */{  < GREAT : ">" >| < LESS : "<" >| < GREATGREAT : ">>" >| < GREATAMPERSAND : ">&" >
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+}
+
+TOKEN : /* OPERATORS */
+{
+  < GREAT : ">" >
+| < LESS : "<" >
+| < GREATGREAT : ">>" >
+| < GREATAMPERSAND : ">&" >
 | < PIPE : "|" >
 | < AMPERSAND : "&" >
-}TOKEN :{  < WORD : ["a"-"z","A"-"Z","_", "-"] ( ["a"-"z","A"-"Z","_","0"-"9"] )* >
-}
+| < EOL : "\n" >
+}
+
+TOKEN :
+{
+  < WORD : ["a"-"z","A"-"Z","_", "-"] ( ["a"-"z","A"-"Z","_","0"-"9"] )* >
+}
+
 /* PARSING */
 //return an object from javacc
 
-Command parseFile() : {
-  Command command_line;
-} 
-{ 
- p_command_line(){command_line = p_command_line();}
- <EOF> { return command_line; }
-}
+//Command parseFile() : {
+//  Command command_line;
+//} 
+//{ 
+//   p_command_line(){command_line = p_command_line();}
+// <EOF> { return command_line; }
+//}
 
-Command p_command_line() : {
+Command parseFile() : {
   List<SingleCommand> pipe_list = new ArrayList<SingleCommand>();
   List<ArrayList<String>> io_modifier_list = new ArrayList<ArrayList<String>>();
 // background_opt = 1 if run in background/[&]
  int background_opt = 0;
 } 
 { 
-	(p_pipe_list() {pipe_list = p_pipe_list(); }) [p_io_modifier_list() {io_modifier_list = p_io_modifier_list(); }] (p_background_opt() {background_opt = p_background_opt(); }) {
-   return new Command(pipe_list, io_modifier_list, background_opt);}
+(pipe_list = p_pipe_list()) [io_modifier_list = p_io_modifier_list()](background_opt = p_background_opt())
+{return new Command(pipe_list, io_modifier_list, background_opt);}
 }
 
 List<SingleCommand> p_pipe_list(): {
@@ -101,7 +129,7 @@ ArrayList<String> p_io_modifier(): {
 int p_background_opt(): { }
 {
   <AMPERSAND> {return 1;}
-| <EOF> {return 0;}
+| <EOL> {return 0;}
 }
 
 

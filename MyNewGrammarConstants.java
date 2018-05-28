@@ -9,17 +9,19 @@ public interface MyNewGrammarConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int GREAT = 5;
+  int GREAT = 4;
   /** RegularExpression Id. */
-  int LESS = 6;
+  int LESS = 5;
   /** RegularExpression Id. */
-  int GREATGREAT = 7;
+  int GREATGREAT = 6;
   /** RegularExpression Id. */
-  int GREATAMPERSAND = 8;
+  int GREATAMPERSAND = 7;
   /** RegularExpression Id. */
-  int PIPE = 9;
+  int PIPE = 8;
   /** RegularExpression Id. */
-  int AMPERSAND = 10;
+  int AMPERSAND = 9;
+  /** RegularExpression Id. */
+  int EOL = 10;
   /** RegularExpression Id. */
   int WORD = 11;
 
@@ -30,7 +32,6 @@ public interface MyNewGrammarConstants {
   String[] tokenImage = {
     "<EOF>",
     "\" \"",
-    "\"\\n\"",
     "\"\\r\"",
     "\"\\t\"",
     "\">\"",
@@ -39,6 +40,7 @@ public interface MyNewGrammarConstants {
     "\">&\"",
     "\"|\"",
     "\"&\"",
+    "\"\\n\"",
     "<WORD>",
   };
 
