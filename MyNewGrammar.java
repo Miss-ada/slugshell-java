@@ -4,19 +4,17 @@ import java.util.*;
 
 
 public class MyNewGrammar implements MyNewGrammarConstants {
-  public static void main(String args []) throws ParseException
-  {
-        MyNewGrammar parser = new MyNewGrammar(System.in);
-    try {
-        //Command result = parser.parseFile();
-                Command result = parser.parseFile();
-        System.out.println("file parsed successfully.");
-                //System.out.println(result); 
-      }
-      catch(ParseException e){
-        System.out.println(e.toString());
-      }
-  }
+
+//          MyNewGrammar parser = new MyNewGrammar(System.in);
+//          try {
+//              //Command result = parser.parseFile();
+//              Command result = parser.parseFile();
+//              System.out.println("file parsed successfully.");
+//              //System.out.println(result);
+//          } catch (ParseException e) {
+//              System.out.println(e.toString());
+//          }
+
 
 /* PARSING */
 //return an object from javacc
