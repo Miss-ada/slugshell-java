@@ -21,25 +21,25 @@ public class Builtin {
 	static File dir = new File("/Users/wentingzhu");
 	static File[] list = (new File("/Users/wentingzhu")).listFiles();
 
-	public static void main(String[] args) {
-		Scanner sc  = new Scanner(System.in);
-		ArrayList<String> history = new ArrayList<>();
-
-		System.out.println("Welcom! What can I do for you?");
-		boolean over = false;
-		while(true) {
-			System.out.print("slugshell>> ");
-			String string = sc.nextLine();
-			String[] commend  = string.split("\\u007C");
-			for (String subString : commend) {
-				over = builtinCommend(history, over, subString.trim());
-			}
-			if(over) break;
-			history.add(string);
-		}
- 	}
-	static File dir = new File("/Users/wentingzhu");
-	static File[] list = (new File("/Users/wentingzhu")).listFiles();
+//	public static void main(String[] args) {
+//		Scanner sc  = new Scanner(System.in);
+//		ArrayList<String> history = new ArrayList<>();
+//
+//		System.out.println("Welcom! What can I do for you?");
+//		boolean over = false;
+//		while(true) {
+//			System.out.print("slugshell>> ");
+//			String string = sc.nextLine();
+//			String[] commend  = string.split("\\u007C");
+//			for (String subString : commend) {
+//				over = builtinCommend(history, over, subString.trim());
+//			}
+//			if(over) break;
+//			history.add(string);
+//		}
+// 	}
+//	static File dir = new File("/Users/wentingzhu");
+//	static File[] list = (new File("/Users/wentingzhu")).listFiles();
 
 	public static boolean isBuiltinCommend(String string) {
 		if(string.equals("ls") || string.startsWith("ls *") || string.equals("history") || string.equals("status") || string.equals("cd ..")

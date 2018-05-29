@@ -7,7 +7,6 @@ public class slugShell{
         ArrayList<String> history = new ArrayList<>();
         boolean over = false;
 
-        while(true) {
             System.out.println("Welcome! What can I do for you?");
             System.out.print("slugshell>> ");
             MyNewGrammar parser = new MyNewGrammar(System.in);
@@ -32,6 +31,5 @@ public class slugShell{
             } catch (ParseException e) {
                 System.out.println(e.toString());
             }
-        }
     }
 }
