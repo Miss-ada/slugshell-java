@@ -3,7 +3,7 @@
  */
 options
 {
-  static = true;
+  static = false;
   JAVA_UNICODE_ESCAPE = true;
   UNICODE_INPUT = true;
 }
@@ -17,10 +17,12 @@ public class MyNewGrammar
 {
   public static void main(String args []) throws ParseException
   {
-//    Scanner sc  = new Scanner(System.in);
-//    while (true) {
-//		String string = sc.nextLine();
-		MyNewGrammar parser = new MyNewGrammar(System.in);
+    Scanner sc  = new Scanner(System.in);
+    while (true) {
+		String string = sc.nextLine();
+		String s = string.replace("\n", "");
+        InputStream in = new ByteArrayInputStream(s.getBytes());
+        MyNewGrammar parser = new MyNewGrammar(in);
     	try {
         //Command result = parser.parseFile();
 		Command result = parser.parseFile();        
@@ -30,7 +32,7 @@ public class MyNewGrammar
       	catch(ParseException e){
         System.out.println(e.toString());
       }
-    //}	
+    }
   }
  } 
 
@@ -57,7 +59,7 @@ TOKEN : /* OPERATORS */
 | < GREATAMPERSAND : ">&" >
 | < PIPE : "|" >
 | < AMPERSAND : "&" >
-| < EOL : "\n" >
+//| < EOL : "\n" >
 }
 
 TOKEN :
@@ -131,7 +133,7 @@ ArrayList<String> p_io_modifier(): {
 int p_background_opt(): { }
 {
   <AMPERSAND> {return 1;}
-| <EOL> {return 0;}
+| <EOF> {return 0;}
 }
 
 

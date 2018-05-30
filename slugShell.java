@@ -7,9 +7,14 @@ public class slugShell{
         ArrayList<String> history = new ArrayList<>();
         boolean over = false;
 
-            System.out.println("Welcome! What can I do for you?");
-            System.out.print("slugshell>> ");
-            MyNewGrammar parser = new MyNewGrammar(System.in);
+        System.out.println("Welcome! What can I do for you?");
+        System.out.print("slugshell>> ");
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            String string = sc.nextLine();
+            String new_s = string.replace("\n", "");
+            InputStream in = new ByteArrayInputStream(new_s.getBytes());
+            MyNewGrammar parser = new MyNewGrammar(in);
             try {
                 //Command result = parser.parseFile();
                 Command result = parser.parseFile();
@@ -31,5 +36,6 @@ public class slugShell{
             } catch (ParseException e) {
                 System.out.println(e.toString());
             }
+        }
     }
 }

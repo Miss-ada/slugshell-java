@@ -6,10 +6,12 @@ import java.util.*;
 public class MyNewGrammar implements MyNewGrammarConstants {
   public static void main(String args []) throws ParseException
   {
-//    Scanner sc  = new Scanner(System.in);
-//    while (true) {
-//		String string = sc.nextLine();
-                MyNewGrammar parser = new MyNewGrammar(System.in);
+    Scanner sc  = new Scanner(System.in);
+    while (true) {
+                String string = sc.nextLine();
+                String s = string.replace("\u005cn", "");
+        InputStream in = new ByteArrayInputStream(s.getBytes());
+        MyNewGrammar parser = new MyNewGrammar(in);
         try {
         //Command result = parser.parseFile();
                 Command result = parser.parseFile();
@@ -19,7 +21,7 @@ public class MyNewGrammar implements MyNewGrammarConstants {
         catch(ParseException e){
         System.out.println(e.toString());
       }
-    //}	
+    }
   }
 
 /* PARSING */
@@ -32,7 +34,7 @@ public class MyNewGrammar implements MyNewGrammarConstants {
 //   p_command_line(){command_line = p_command_line();}
 // <EOF> { return command_line; }
 //}
-  static final public Command parseFile() throws ParseException {
+  final public Command parseFile() throws ParseException {
   List<SingleCommand> pipe_list = new ArrayList<SingleCommand>();
   List<ArrayList<String>> io_modifier_list = new ArrayList<ArrayList<String>>();
 // background_opt = 1 if run in background/[&]
@@ -54,7 +56,7 @@ public class MyNewGrammar implements MyNewGrammarConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public List<SingleCommand> p_pipe_list() throws ParseException {
+  final public List<SingleCommand> p_pipe_list() throws ParseException {
   List<SingleCommand> pipe_list = new ArrayList<SingleCommand>();
   SingleCommand sc;
   SingleCommand psc;
@@ -78,7 +80,7 @@ public class MyNewGrammar implements MyNewGrammarConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public SingleCommand p_cmd_and_args() throws ParseException {
+  final public SingleCommand p_cmd_and_args() throws ParseException {
   Token cmd ;
   List<String> args = new ArrayList<String>();
   Token arg;
@@ -100,7 +102,7 @@ public class MyNewGrammar implements MyNewGrammarConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public List<ArrayList<String>> p_io_modifier_list() throws ParseException {
+  final public List<ArrayList<String>> p_io_modifier_list() throws ParseException {
   List<ArrayList<String>> io_modifiers = new ArrayList<ArrayList<String>>();
   ArrayList<String > io_modifier;
     label_3:
@@ -123,7 +125,7 @@ public class MyNewGrammar implements MyNewGrammarConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public ArrayList<String> p_io_modifier() throws ParseException {
+  final public ArrayList<String> p_io_modifier() throws ParseException {
   ArrayList<String> io_modifier = new ArrayList<String>();
   Token dir;
   Token filename;
@@ -156,14 +158,14 @@ public class MyNewGrammar implements MyNewGrammarConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public int p_background_opt() throws ParseException {
+  final public int p_background_opt() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case AMPERSAND:
       jj_consume_token(AMPERSAND);
                {if (true) return 1;}
       break;
-    case EOL:
-      jj_consume_token(EOL);
+    case 0:
+      jj_consume_token(0);
          {if (true) return 0;}
       break;
     default:
@@ -174,23 +176,22 @@ public class MyNewGrammar implements MyNewGrammarConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static private boolean jj_initialized_once = false;
   /** Generated Token Manager. */
-  static public MyNewGrammarTokenManager token_source;
-  static JavaCharStream jj_input_stream;
+  public MyNewGrammarTokenManager token_source;
+  JavaCharStream jj_input_stream;
   /** Current token. */
-  static public Token token;
+  public Token token;
   /** Next token. */
-  static public Token jj_nt;
-  static private int jj_ntk;
-  static private int jj_gen;
-  static final private int[] jj_la1 = new int[6];
+  public Token jj_nt;
+  private int jj_ntk;
+  private int jj_gen;
+  final private int[] jj_la1 = new int[6];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0xf0,0x100,0x800,0xf0,0xf0,0x600,};
+      jj_la1_0 = new int[] {0xf0,0x100,0x400,0xf0,0xf0,0x201,};
    }
 
   /** Constructor with InputStream. */
@@ -199,13 +200,6 @@ public class MyNewGrammar implements MyNewGrammarConstants {
   }
   /** Constructor with InputStream and supplied encoding */
   public MyNewGrammar(java.io.InputStream stream, String encoding) {
-    if (jj_initialized_once) {
-      System.out.println("ERROR: Second call to constructor of static parser.  ");
-      System.out.println("       You must either use ReInit() or set the JavaCC option STATIC to false");
-      System.out.println("       during parser generation.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     try { jj_input_stream = new JavaCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source = new MyNewGrammarTokenManager(jj_input_stream);
     token = new Token();
@@ -215,11 +209,11 @@ public class MyNewGrammar implements MyNewGrammarConstants {
   }
 
   /** Reinitialise. */
-  static public void ReInit(java.io.InputStream stream) {
+  public void ReInit(java.io.InputStream stream) {
      ReInit(stream, null);
   }
   /** Reinitialise. */
-  static public void ReInit(java.io.InputStream stream, String encoding) {
+  public void ReInit(java.io.InputStream stream, String encoding) {
     try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source.ReInit(jj_input_stream);
     token = new Token();
@@ -230,13 +224,6 @@ public class MyNewGrammar implements MyNewGrammarConstants {
 
   /** Constructor. */
   public MyNewGrammar(java.io.Reader stream) {
-    if (jj_initialized_once) {
-      System.out.println("ERROR: Second call to constructor of static parser. ");
-      System.out.println("       You must either use ReInit() or set the JavaCC option STATIC to false");
-      System.out.println("       during parser generation.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     jj_input_stream = new JavaCharStream(stream, 1, 1);
     token_source = new MyNewGrammarTokenManager(jj_input_stream);
     token = new Token();
@@ -246,7 +233,7 @@ public class MyNewGrammar implements MyNewGrammarConstants {
   }
 
   /** Reinitialise. */
-  static public void ReInit(java.io.Reader stream) {
+  public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
     token = new Token();
@@ -257,13 +244,6 @@ public class MyNewGrammar implements MyNewGrammarConstants {
 
   /** Constructor with generated Token Manager. */
   public MyNewGrammar(MyNewGrammarTokenManager tm) {
-    if (jj_initialized_once) {
-      System.out.println("ERROR: Second call to constructor of static parser. ");
-      System.out.println("       You must either use ReInit() or set the JavaCC option STATIC to false");
-      System.out.println("       during parser generation.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     token_source = tm;
     token = new Token();
     jj_ntk = -1;
@@ -280,7 +260,7 @@ public class MyNewGrammar implements MyNewGrammarConstants {
     for (int i = 0; i < 6; i++) jj_la1[i] = -1;
   }
 
-  static private Token jj_consume_token(int kind) throws ParseException {
+  private Token jj_consume_token(int kind) throws ParseException {
     Token oldToken;
     if ((oldToken = token).next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -296,7 +276,7 @@ public class MyNewGrammar implements MyNewGrammarConstants {
 
 
 /** Get the next Token. */
-  static final public Token getNextToken() {
+  final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
     jj_ntk = -1;
@@ -305,7 +285,7 @@ public class MyNewGrammar implements MyNewGrammarConstants {
   }
 
 /** Get the specific Token. */
-  static final public Token getToken(int index) {
+  final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
       if (t.next != null) t = t.next;
@@ -314,21 +294,21 @@ public class MyNewGrammar implements MyNewGrammarConstants {
     return t;
   }
 
-  static private int jj_ntk() {
+  private int jj_ntk() {
     if ((jj_nt=token.next) == null)
       return (jj_ntk = (token.next=token_source.getNextToken()).kind);
     else
       return (jj_ntk = jj_nt.kind);
   }
 
-  static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
-  static private int[] jj_expentry;
-  static private int jj_kind = -1;
+  private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  private int[] jj_expentry;
+  private int jj_kind = -1;
 
   /** Generate ParseException. */
-  static public ParseException generateParseException() {
+  public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[12];
+    boolean[] la1tokens = new boolean[11];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -342,7 +322,7 @@ public class MyNewGrammar implements MyNewGrammarConstants {
         }
       }
     }
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < 11; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
@@ -357,11 +337,11 @@ public class MyNewGrammar implements MyNewGrammarConstants {
   }
 
   /** Enable tracing. */
-  static final public void enable_tracing() {
+  final public void enable_tracing() {
   }
 
   /** Disable tracing. */
-  static final public void disable_tracing() {
+  final public void disable_tracing() {
   }
 
  }

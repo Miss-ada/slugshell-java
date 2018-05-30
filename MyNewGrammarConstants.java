@@ -21,9 +21,7 @@ public interface MyNewGrammarConstants {
   /** RegularExpression Id. */
   int AMPERSAND = 9;
   /** RegularExpression Id. */
-  int EOL = 10;
-  /** RegularExpression Id. */
-  int WORD = 11;
+  int WORD = 10;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -40,7 +38,6 @@ public interface MyNewGrammarConstants {
     "\">&\"",
     "\"|\"",
     "\"&\"",
-    "\"\\n\"",
     "<WORD>",
   };
 
