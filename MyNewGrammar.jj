@@ -6,8 +6,6 @@ options
   static = true;
   JAVA_UNICODE_ESCAPE = true;
   UNICODE_INPUT = true;
-  DEBUG_PARSER=true;
-  DEBUG_TOKEN_MANAGER = true;
 }
 
 PARSER_BEGIN(MyNewGrammar)
@@ -18,17 +16,21 @@ import java.util.*;
 public class MyNewGrammar
 {
   public static void main(String args []) throws ParseException
-  { 
-	MyNewGrammar parser = new MyNewGrammar(System.in);
-    try {
+  {
+//    Scanner sc  = new Scanner(System.in);
+//    while (true) {
+//		String string = sc.nextLine();
+		MyNewGrammar parser = new MyNewGrammar(System.in);
+    	try {
         //Command result = parser.parseFile();
 		Command result = parser.parseFile();        
         System.out.println("file parsed successfully.");       
  		//System.out.println(result); 
-      }
-      catch(ParseException e){
+      	}
+      	catch(ParseException e){
         System.out.println(e.toString());
-      }	
+      }
+    //}	
   }
  } 
 
