@@ -98,7 +98,7 @@ public class MyNewGrammar implements MyNewGrammarConstants {
       arg = jj_consume_token(WORD);
                                args.add(arg.image);
     }
-                                                        {if (true) return new SingleCommand(cmd.image, args);}
+    {if (true) return new SingleCommand(cmd.image, args);}
     throw new Error("Missing return statement in function");
   }
 
